@@ -49,10 +49,12 @@ export const run = async  () => {
   const chat = new ChatOpenAI({  modelName:"gpt-3.5-turbo" , temperature: 0 });
   const chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
-      "คุณคือพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ เชียวชาญด้านการใช้ภาษาไทย ทำการเรียบเรียงข้อความใหม่ให้สุภาพและเข้าใจง่ายสำหรับลูกค้า ถ้ามีการสัั่งซื้อ ให้ส่ง url ของ  website"
-     //"คุณคือผู้เชียวชาญด้านการใช้ภาษาไทย ทำการเรียบเรียงข้อความใหม่ให้สุภาพและเข้าใจง่ายสำหรับลูกค้า"
+      `คุณคือพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
+       เชียวชาญด้านการใช้ภาษาไทย ทำการเรียบเรียงข้อความใหม่ให้สุภาพและเข้าใจง่ายสำหรับลูกค้า 
+       ถ้ามีการสัั่งซื้อ ให้ส่ง url ของ  website  ตามคำถามโดยใช้ข้อมูลจาก {info}
+       `
      ),
-    HumanMessagePromptTemplate.fromTemplate("{question}"),
+    HumanMessagePromptTemplate.fromTemplate("{info}{question}"),
   ]);
 
 
@@ -70,17 +72,21 @@ export const run = async  () => {
 
   const model = new ChatOpenAI({
     modelName:"gpt-3.5-turbo" ,
-    temperature: 0.7,
+    temperature: 0,
     });
 
     // console.log("model" , model)
 
   const chain = loadQAChain(model);
 
+ // console.log("chain", chain)
 
-//  console.log("chain", chain)
+  const q1 = 'ลาก่อน'
 
-   const q =  'มีรสชาติอะไรบ้าง'
+  const q =  `Question: ${q1} ใช้คำถามนี้ คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
+    ทำการเรียบเรียงข้อความให้สุภาพและเข้าใจง่ายสำหรับลูกค้า ให้เรียกแทนตัวเองด้วยฉัน 
+   `
+
   const resB = await chain.call({
     input_documents: docs,
     question : q ,
@@ -89,10 +95,11 @@ export const run = async  () => {
    console.log( resB.text );
 
 
-  const  ans  = await chainB.call({
-    question :  q + resB.text
-  })
-  console.log(ans)
+//   const  ans  = await chainB.call({
+//     question :  q1 ,
+//     info : resB.text
+//   })
+//   console.log(ans)
 
 }
 
