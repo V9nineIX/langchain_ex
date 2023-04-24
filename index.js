@@ -58,16 +58,18 @@ export const run = async  () => {
   ]);
 
 
+  const chainB = new LLMChain({
+    llm: chat,
+    prompt:chatPrompt
+  });
+
   const loader = new TextLoader(
     "example.txt"
   );
   const docs = await loader.load();
 
 
-  const chainB = new LLMChain({
-    llm: chat,
-    prompt:chatPrompt
-  });
+
 
 
   const model = new ChatOpenAI({
@@ -81,10 +83,10 @@ export const run = async  () => {
 
  // console.log("chain", chain)
 
-  const q1 = 'ลาก่อน'
+  const q1 = 'ขายอะไร'
 
   const q =  `Question: ${q1} ใช้คำถามนี้ คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
-    ทำการเรียบเรียงข้อความให้สุภาพและเข้าใจง่ายสำหรับลูกค้า ให้เรียกแทนตัวเองด้วยฉัน 
+    ทำการเรียบเรียงข้อความให้สุภาพและเข้าใจง่ายสำหรับลูกค้า ให้เรียกแทนตัวเองด้วยเรา ให้เรียกแทนผู้ถามว่าคุณลูกค้า Helpful Answer:'
    `
 
   const resB = await chain.call({
