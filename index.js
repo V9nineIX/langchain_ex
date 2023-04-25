@@ -74,41 +74,41 @@ export const run2 = async  () => {
 //   });
 
   const loader = new TextLoader(
-    "example.txt"
+    "example2.txt"
   );
   const docs = await loader.load();
 
 
   const model = new ChatOpenAI({
-    modelName:"gpt-3.5-turbo" ,
+    modelName: "gpt-3.5-turbo",
     temperature: 0,
-    });
+  });
 
-    // console.log("model" , model)
+  // console.log("model" , model)
 
   const chain = loadQAChain(model);
 
- // console.log("chain", chain)
+  // console.log("chain", chain)
 
   const q1 = 'ขายอะไร'
 
-  const q =  `Question: ${q1} ใช้คำถามนี้ คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
+  const q = `Question: ${q1} ใช้คำถามนี้ คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
     ทำการเรียบเรียงข้อความให้สุภาพและเข้าใจง่ายสำหรับลูกค้า ให้เรียกแทนตัวเองด้วยเรา ให้เรียกแทนผู้ถามว่าคุณลูกค้า Helpful Answer:'
    `
 
   const resB = await chain.call({
     input_documents: docs,
-    question : q ,
+    question: q,
   });
 
-   console.log( resB.text );
+  console.log(resB.text);
 
 
-//   const  ans  = await chainB.call({
-//     question :  q1 ,
-//     info : resB.text
-//   })
-//   console.log(ans)
+  //   const  ans  = await chainB.call({
+  //     question :  q1 ,
+  //     info : resB.text
+  //   })
+  //   console.log(ans)
 
 }
 
@@ -128,7 +128,7 @@ export const run = async () => {
     });
 
     /* Load in the file we want to do question answering over */
-    const text = fs.readFileSync("example.txt", "utf8");
+    const text = fs.readFileSync("example2.txt", "utf8");
     /* Split the text into chunks */
     const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000 });
 
@@ -147,7 +147,7 @@ export const run = async () => {
           'ประวัติการสนทนา:\n' +
           '{chat_history}\n' +
           'Question: {question}\n'+ 
-          'ไม่มีพยามตอบคำถามที่ไม่มีข้อมูล'
+          'ไม่พยามตอบคำถามที่ไม่มีข้อมูล'
       }
     //   {
     //     questionGeneratorTemplate:'คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ\n' +
@@ -163,7 +163,7 @@ export const run = async () => {
     //     'Follow Up Input: {question}\n' +
     //     'Standalone question:',
 
- console.log("chain",chain)
+      //console.log("chain",chain)
 
     /* Ask it a question */
     const question = "ราคาเท่าไหร่";
@@ -178,20 +178,20 @@ export const run = async () => {
     const chatHistory =   question + res.text;
    // console.log("chatHistory" , question + res.text)
 
-    const question2 = "ขายอะไร";
-    const prompt2 =  getPrompt(question2)
-    console.log(" prompt2 " ,prompt2)
+    // const question2 = "ขายอะไร";
+    // const prompt2 =  getPrompt(question2)
+    // console.log(" prompt2 " ,prompt2)
 
-    const followUpRes = await chain.call({
-      question:   prompt2  ,
-      chat_history: [],
-    });
+    // const followUpRes = await chain.call({
+    //   question:   prompt2  ,
+    //   chat_history: [],
+    // });
 
-     console.log(followUpRes);
+    //  console.log(followUpRes);
 
   };
 
 
 
 
-  run();
+run();
