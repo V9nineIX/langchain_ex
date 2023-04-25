@@ -1,22 +1,22 @@
-  //Import the OpenAPI Large Language Model (you can import other models here eg. Cohere)
-  import { OpenAI  } from 'langchain/llms/openai';
-  import { ChatOpenAI } from 'langchain/chat_models/openai'
-  import { HumanChatMessage , SystemChatMessage  } from 'langchain/schema'
-  //Load environment variables (populate process.env from .env file)
-  import * as dotenv from "dotenv";
-  import { TextLoader } from "langchain/document_loaders/fs/text";
-  import { loadQAChain } from "langchain/chains";
+//Import the OpenAPI Large Language Model (you can import other models here eg. Cohere)
+import { OpenAI } from 'langchain/llms/openai';
+import { ChatOpenAI } from 'langchain/chat_models/openai'
+import { HumanChatMessage, SystemChatMessage } from 'langchain/schema'
+//Load environment variables (populate process.env from .env file)
+import * as dotenv from "dotenv";
+import { TextLoader } from "langchain/document_loaders/fs/text";
+import { loadQAChain } from "langchain/chains";
 
-  import {
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    PromptTemplate,
-    SystemMessagePromptTemplate,
-  } from "langchain/prompts";
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  PromptTemplate,
+  SystemMessagePromptTemplate,
+} from "langchain/prompts";
 
-  import { LLMChain } from "langchain/chains";
+import { LLMChain } from "langchain/chains";
 
-  dotenv.config();
+dotenv.config();
 
 //   export const run = async () => {
 //      try {
@@ -43,28 +43,28 @@
 
 
 
-export const run = async  () => {
+export const run = async () => {
 
   // We can also construct an LLMChain from a ChatPromptTemplate and a chat model.
-  const chat = new ChatOpenAI({  modelName:"gpt-3.5-turbo" , temperature: 0 });
+  const chat = new ChatOpenAI({ modelName: "gpt-3.5-turbo", temperature: 0 });
   const chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
       `คุณคือพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
        เชียวชาญด้านการใช้ภาษาไทย ทำการเรียบเรียงข้อความใหม่ให้สุภาพและเข้าใจง่ายสำหรับลูกค้า 
        ถ้ามีการสัั่งซื้อ ให้ส่ง url ของ  website  ตามคำถามโดยใช้ข้อมูลจาก {info}
        `
-     ),
+    ),
     HumanMessagePromptTemplate.fromTemplate("{info}{question}"),
   ]);
 
 
   const chainB = new LLMChain({
     llm: chat,
-    prompt:chatPrompt
+    prompt: chatPrompt
   });
 
   const loader = new TextLoader(
-    "example.txt"
+    "example2.txt"
   );
   const docs = await loader.load();
 
@@ -73,39 +73,39 @@ export const run = async  () => {
 
 
   const model = new ChatOpenAI({
-    modelName:"gpt-3.5-turbo" ,
+    modelName: "gpt-3.5-turbo",
     temperature: 0,
-    });
+  });
 
-    // console.log("model" , model)
+  // console.log("model" , model)
 
   const chain = loadQAChain(model);
 
- // console.log("chain", chain)
+  // console.log("chain", chain)
 
   const q1 = 'ขายอะไร'
 
-  const q =  `Question: ${q1} ใช้คำถามนี้ คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
+  const q = `Question: ${q1} ใช้คำถามนี้ คุณคือพนักงานขาย ตอบคำถามในแบบพนักงานขาย ที่เชี่ยวชาญการขายสินค้า ตอบคำถามอย่างสุภาพ ตอบคำถามลงท้ายด้วยค่ะเสมอ 
     ทำการเรียบเรียงข้อความให้สุภาพและเข้าใจง่ายสำหรับลูกค้า ให้เรียกแทนตัวเองด้วยเรา ให้เรียกแทนผู้ถามว่าคุณลูกค้า Helpful Answer:'
    `
 
   const resB = await chain.call({
     input_documents: docs,
-    question : q ,
+    question: q,
   });
 
-   console.log( resB.text );
+  console.log(resB.text);
 
 
-//   const  ans  = await chainB.call({
-//     question :  q1 ,
-//     info : resB.text
-//   })
-//   console.log(ans)
+  //   const  ans  = await chainB.call({
+  //     question :  q1 ,
+  //     info : resB.text
+  //   })
+  //   console.log(ans)
 
 }
 
 
 
 
-  run();
+run();
